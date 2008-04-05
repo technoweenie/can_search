@@ -1,0 +1,39 @@
+class << ActiveRecord::Base
+  # Allows you create common named_scopes and chain them together with #search and 
+  # #search_for.
+  #
+  #   class Topic
+  #     belongs_to :forum
+  #   
+  #     can_search do
+  #       scoped_by :forums
+  #       scoped_by :created, :scope => :date_range
+  #     end
+  #
+  #     # creates these two named scopes
+  #     #   named_scope :by_forums, lambda { |f| {:conditions => {:forum_id => f}} }
+  #     #   named_scope :created,   lambda { |range| {:conditions => ...} }
+  #   end
+  #
+  #   Topic.search(:forum => 1)                  # Topic.by_forums(1)
+  #   Topic.search(:forums => [1,2])             # Topic.by_forums([1,2])
+  #   Topic.search(:created => (time1..time2))   # Topic.created(time1..time2)
+  #   Topic.search(:created => \
+  #     {:period => :daily, :start => Time.now}) # Topic.created(Time.now, Time.now + 1.day)
+  #
+  # You can automatically paginate:
+  #
+  #   Topic.search :forum => 1, :page => params[:page]
+  #
+  # You can also access the named_scope directly for custom #find or #calculate calls.
+  #
+  #   Topic.search_for(:forum => 1).sum(:hits)
+  #
+  # Oh, and you can combine scopes:
+  #
+  #   Topic.search :forum => 1, :forums => [2, 3], :created => (time1..time2)
+  #
+  def can_search(&block)
+    self.search_scopes = CanSearch::SearchScopes.new(self, &block)
+  end
+end
