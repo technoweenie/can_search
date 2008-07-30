@@ -14,7 +14,7 @@ module CanSearch
 
     it "paginates records" do
       compare_records Record.search(:page => nil, @scope.name => [2]), [:day, :week_2, :biweek_1]
-    end
+    end if ActiveRecord::Base.respond_to?(:paginate)
     
     it "filters records with plural value from named_scope" do
       compare_records Record.search(@scope.name => [2]), [:day, :week_2, :biweek_1, :month_1]

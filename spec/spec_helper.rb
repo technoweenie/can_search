@@ -3,6 +3,7 @@ require 'rubygems'
 dir = File.dirname(__FILE__)
 rails_app_spec = "#{dir}/../../../../config/environment.rb"
 vendor_rspec   = "#{dir}/../../rspec/lib"
+$:.unshift "#{dir}/../lib"
 
 if File.exist?(vendor_rspec)
   $:.unshift vendor_rspec
@@ -12,13 +13,19 @@ end
 
 if File.exist?(rails_app_spec)
   require rails_app_spec
-  Time.zone = "UTC"
 else
-  raise "TODO: attempt to load activerecord and activesupport from gems"
-  # also, establish connection with sqlite3 or use DB env var as path to database.yml
+  gem 'activesupport', '>=2.1'
+  gem 'activerecord', '>=2.1'
+  require 'active_support'
+  require 'active_record'
+  require 'will_paginate'
+  WillPaginate.enable_activerecord
+  ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => ":memory:"
+  require 'can_search'
+  require "#{dir}/../init"
 end
 
-$:.unshift "#{dir}/../lib"
+Time.zone = "UTC"
 
 require 'ruby-debug'
 require 'spec'
@@ -73,7 +80,7 @@ module CanSearch
       end
       
       base.after :all do
-        Record.connection.drop_table :can_search_records
+        Record.drop_table
       end
     end
 
