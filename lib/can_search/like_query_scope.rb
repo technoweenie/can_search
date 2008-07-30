@@ -1,6 +1,15 @@
 module CanSearch
   # Generates a named scope for searching with a "LIKE ?" query. A format option can be specified 
   # to change the string used for matching. The default matching string is "%?%".
+  #
+  #   class Topic
+  #     can_search do
+  #       scoped_by :name, :scope => :like
+  #     end
+  #   end
+  #
+  #   Topic.search(:name => "john")
+  #
   class LikeQueryScope < BaseScope
     def initialize(model, name, options = {})
       super
