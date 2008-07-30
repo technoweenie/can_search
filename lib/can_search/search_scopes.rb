@@ -103,7 +103,22 @@ module CanSearch
     end
   end
 
-  SearchScopes.scope_types[:reference] = ReferenceScope
+  #class LikeQueryScope < BaseScope
+  #  def initialize(model, name, options = {})
+  #    super
+  #    @named_scope = options[:named_scope] || "like_#{name}".to_sym
+  #    @model.named_scope @named_scope, lambda { |q| {:conditions => ["#{@name} LIKE ?", "%#{q}%"]} }
+  #  end
+  #
+  #  def scope_for(finder, options = {})
+  #    query = options.delete(@name)
+  #    query.blank? ? finder : finder.send(@named_scope, query)
+  #  end
+  #end
+
+  SearchScopes.scope_types.update \
+    :reference => ReferenceScope#,
+    #:like      => LikeQueryScope
 end
 
 send respond_to?(:require_dependency) ? :require_dependency : :require, 'can_search/date_range_scope'
