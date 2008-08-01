@@ -26,6 +26,10 @@ module CanSearch
     def search_for(options = {})
       @scopes.values.inject(@model) { |finder, scope| scope.scope_for(finder, options) }
     end
+    
+    def add_existing_scope(name)
+      @scopes[name] = BaseScope.new(@model, name, :named_scope => name)
+    end
 
     def [](name)
       @scopes[name]
@@ -50,11 +54,13 @@ module CanSearch
 
     def initialize(model, name, options = {})
       @model, @name = model, name
+      @named_scope  = options[:named_scope] if options[:named_scope]
     end
     
     # strip out any scoped keys from options and return a chained finder.
     def scope_for(finder, options = {})
-      finder
+      value = options.delete(@named_scope)
+      finder.send(@named_scope, value)
     end
 
     def ==(other)

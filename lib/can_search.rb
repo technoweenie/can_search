@@ -7,7 +7,7 @@ module CanSearch
 
   # Calls either #paginate or #all on the returned scoped from #search_for.
   def search(options = {})
-    options = options.dup
+    options = options.dup.symbolize_keys
     search_for(options).send(options.key?(:page) ? :paginate : :all, options)
   end
 

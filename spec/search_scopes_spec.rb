@@ -63,8 +63,23 @@ module CanSearch
         end
         @scope = ReferenceScope.new(Record, :masters, :attribute => :parent_id, :singular => :master, :scope => :reference, :named_scope => :great_scott)
       end
-
+  
       it_should_behave_like "all Reference Scopes"
+    end
+    
+    describe "(add prexisting scopes with a custom scope)" do
+      include CanSearchSpecHelper
+      before do      
+        @scope = Record.named_scope :example, lambda { |name| {:conditions => {:name => name} } }
+        Record.can_search do
+          add_existing_scope :example
+        end
+      end
+      
+      it "uses custom scopes" do
+        record = Record.create! :name => "this"
+        Record.search(:example => "this").should == [ record ]
+      end
     end
   end
 end
