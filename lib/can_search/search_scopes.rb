@@ -31,6 +31,12 @@ module CanSearch
       @scopes[name] = BaseScope.new(@model, name, :named_scope => name)
     end
 
+    def add_existing_scopes(*names)
+			names.each do |name|
+				@scopes[name] = BaseScope.new(@model, name, :named_scope => name)
+			end
+    end
+
     def [](name)
       @scopes[name]
     end

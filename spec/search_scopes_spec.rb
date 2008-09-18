@@ -73,8 +73,7 @@ module CanSearch
         @scope = Record.named_scope :example, lambda { |name| {:conditions => {:name => name} } }
         Record.named_scope :peanut_butter, lambda { |id| {:conditions => {:parent_id => id} } }
         Record.can_search do
-          add_existing_scope :example
-          add_existing_scope :peanut_butter
+          add_existing_scopes :example, :peanut_butter
         end
       end
       
