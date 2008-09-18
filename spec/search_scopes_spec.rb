@@ -71,14 +71,26 @@ module CanSearch
       include CanSearchSpecHelper
       before do      
         @scope = Record.named_scope :example, lambda { |name| {:conditions => {:name => name} } }
+        Record.named_scope :peanut_butter, lambda { |id| {:conditions => {:parent_id => id} } }
         Record.can_search do
           add_existing_scope :example
+          add_existing_scope :peanut_butter
         end
       end
       
       it "uses custom scopes" do
-        record = Record.create! :name => "this"
-        Record.search(:example => "this").should == [ record ]
+        record = Record.create! :name => "this", :parent_id => 3
+        Record.search(:example => "this", :peanut_butter => record.parent_id).should == [ record ]
+      end
+      
+      it "excludes unused scopes" do
+        record = Record.create! :name => "that", :parent_id => 3
+        Record.search(:example => "that").should == [ record ]
+      end
+      
+      it "includes scopes if they set to nil" do
+        record = Record.create! :name => nil, :parent_id => 3
+        Record.search(:example => nil, :peanut_butter => nil).should == [ ]
       end
     end
   end

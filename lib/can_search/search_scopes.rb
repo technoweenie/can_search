@@ -59,6 +59,7 @@ module CanSearch
     
     # strip out any scoped keys from options and return a chained finder.
     def scope_for(finder, options = {})
+      return finder unless options.keys.include? @named_scope
       value = options.delete(@named_scope)
       finder.send(@named_scope, value)
     end
