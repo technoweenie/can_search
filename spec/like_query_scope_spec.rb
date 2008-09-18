@@ -19,6 +19,10 @@ module CanSearch
     it "filters records by name that doesn't match" do
       compare_records Record.search(:name => "aye"), []
     end
+    
+    it "doesn't filter records if the specified parameter is nil" do
+     compare_records Record.search(:name => nil), [:default, :day, :week_1, :week_2, :biweek_1, :biweek_2, :month_1, :month_2, :archive ]
+    end
   end
 
   describe LikeQueryScope do
