@@ -91,15 +91,15 @@ module CanSearch
       it "creates weekly range" do
         Record.date_range_for(:weekly, Time.utc(2008, 1, 1)).should == (Time.utc(2007, 12, 31)..Time.utc(2008, 1, 7)-1.second)
       end
-      
+
       it "creates bi-weekly range for first half of the month" do
-        Record.date_range_for(:'bi-weekly', Time.utc(2008, 1, 5)).should == (Time.utc(2008, 1, 1)..Time.utc(2008, 1, 15)-1.second)
+        Record.date_range_for(:'bi-weekly', Time.utc(2008, 1, 5)).should == (Time.utc(2008, 1, 1)..Time.utc(2008, 1, 16)-1.second)
       end
-      
+
       it "creates bi-weekly range for second half of the month" do
-        Record.date_range_for(:'bi-weekly', Time.utc(2008, 1, 16)).should == (Time.utc(2008, 1, 15)..Time.utc(2008, 2, 1)-1.second)
+        Record.date_range_for(:'bi-weekly', Time.utc(2008, 1, 17)).should == (Time.utc(2008, 1, 16)..Time.utc(2008, 2, 1)-1.second)
       end
-      
+
       it "creates monthly range" do
         Record.date_range_for(:monthly, Time.utc(2008, 1, 5)).should == (Time.utc(2008, 1, 1)..Time.utc(2008, 2, 1)-1)
       end
